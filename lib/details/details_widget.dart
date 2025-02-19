@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/index.dart';
 import 'package:flutter/material.dart';
 import 'details_model.dart';
 export 'details_model.dart';
@@ -14,6 +15,9 @@ class DetailsWidget extends StatefulWidget {
   });
 
   final TasksRecord? taskDoc;
+
+  static String routeName = 'details';
+  static String routePath = '/details';
 
   @override
   State<DetailsWidget> createState() => _DetailsWidgetState();
@@ -97,7 +101,7 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                               size: 30.0,
                             ),
                             onPressed: () async {
-                              context.goNamed('tasks');
+                              context.goNamed(TasksWidget.routeName);
                             },
                           ),
                           FlutterFlowIconButton(
