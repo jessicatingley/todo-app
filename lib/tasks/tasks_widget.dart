@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/components/add_task_widget.dart';
 import '/components/task_widget.dart';
@@ -6,6 +7,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'tasks_model.dart';
 export 'tasks_model.dart';
 
@@ -28,6 +30,26 @@ class _TasksWidgetState extends State<TasksWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => TasksModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.apiResultem2 = await InspirationalQuoteCall.call();
+
+      if ((_model.apiResultem2?.succeeded ?? true)) {
+        _model.apiResponse = getJsonField(
+          (_model.apiResultem2?.jsonBody ?? ''),
+          r'''$[0].q''',
+        ).toString().toString();
+        _model.apiAuthor = getJsonField(
+          (_model.apiResultem2?.jsonBody ?? ''),
+          r'''$[0].a''',
+        ).toString().toString();
+        safeSetState(() {});
+      } else {
+        _model.apiResponse = 'Stay focused and keep pushing forward';
+        safeSetState(() {});
+      }
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -177,6 +199,40 @@ class _TasksWidgetState extends State<TasksWidget> {
                       },
                     );
                   },
+                ),
+              ),
+              Align(
+                alignment: AlignmentDirectional(0.0, 0.0),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                  child: Text(
+                    _model.apiResponse,
+                    textAlign: TextAlign.center,
+                    style: FlutterFlowTheme.of(context).headlineSmall.override(
+                          fontFamily: 'Inter',
+                          fontSize: 14.0,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                        ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: AlignmentDirectional(0.0, 0.0),
+                child: Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 70.0),
+                  child: Text(
+                    _model.apiAuthor,
+                    style: FlutterFlowTheme.of(context).headlineSmall.override(
+                          fontFamily: 'Inter',
+                          fontSize: 12.0,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                        ),
+                  ),
                 ),
               ),
             ].divide(SizedBox(height: 12.0)),
